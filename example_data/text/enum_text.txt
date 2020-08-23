@@ -1,4 +1,4 @@
 python
 pytorch
-深度学习
+crnn
 tensorflow
