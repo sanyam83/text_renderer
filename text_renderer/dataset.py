@@ -42,6 +42,9 @@ class Dataset:
         """
         pass
 
+    def read_count(self) -> int:
+        pass
+    
     def close(self):
         pass
 
