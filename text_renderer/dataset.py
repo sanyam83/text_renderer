@@ -22,18 +22,14 @@ class Dataset:
 
     def read(self, name) -> Dict:
         """
-
         Parameters
         ----------
             name : str
                 000000001
-
         Returns
         -------
             dict :
-
                 .. code-block:: bash
-
                     {
                         "image": ndarray,
                         "label": "label",
@@ -44,7 +40,10 @@ class Dataset:
 
     def read_count(self) -> int:
         pass
-    
+
+    def write_count(self, count: int):
+        pass
+
     def close(self):
         pass
 
@@ -59,9 +58,7 @@ class ImgDataset(Dataset):
     """
     Save generated image as jpg file, save label and meta in json
     json file format:
-
     .. code-block:: bash
-
         {
              "labels": {
                 "000000000": "test",
@@ -84,7 +81,7 @@ class ImgDataset(Dataset):
             os.makedirs(self._img_dir)
         self._label_path = os.path.join(data_dir, self.LABEL_NAME)
 
-        self._data = {"text": {}, "width": {}, "height": {}, "filename": {}}
+        self._data = {"num-samples": 0, "labels": {}, "sizes": {}}
         if os.path.exists(self._label_path):
             with open(self._label_path, "r", encoding="utf-8") as f:
                 self._data = json.load(f)
@@ -92,23 +89,26 @@ class ImgDataset(Dataset):
     def write(self, name: str, image: np.ndarray, label: str):
         img_path = os.path.join(self._img_dir, name + ".jpg")
         cv2.imwrite(img_path, image, self.encode_param())
-        self._data["text"][name] = label
-        self._data["filename"][name] = img_path
+        self._data["labels"][name] = label
+
         height, width = image.shape[:2]
-        self._data["height"][name] = height
-        self._data["width"][name] = width
+        self._data["sizes"][name] = (width, height)
 
     def read(self, name: str) -> Dict:
         img_path = os.path.join(self._img_dir, name + ".jpg")
         image = cv2.imread(img_path)
-        text = self._data["text"][name]
-        width = self._data["width"][name]
-        height = self._data["height"][name]
-        filename = self._data["filename"][name]
-        return {"image": image, "filename": file_name, "width": width, "height": height, "class":{"text": text }}
+        label = self._data["labels"][name]
+        size = self._data["sizes"][name]
+        return {"image": image, "label": label, "size": size}
 
     def read_size(self, name: str) -> [int, int]:
-        return self._data["width"][name], self._data["height"][name]
+        return self._data["sizes"][name]
+
+    def read_count(self) -> int:
+        return self._data.get("num-samples", 0)
+
+    def write_count(self, count: int):
+        self._data["num-samples"] = count
 
     def close(self):
         with open(self._label_path, "w", encoding="utf-8") as f:
@@ -119,11 +119,9 @@ class LmdbDataset(Dataset):
     """
     Save generated image into lmdb. Compatible with https://github.com/PaddlePaddle/PaddleOCR
     Keys in lmdb:
-
         - image-000000001: image raw bytes
         - label-000000001: string
         - size-000000001: "width,height"
-
     """
 
     def __init__(self, data_dir: str):
@@ -154,12 +152,9 @@ class LmdbDataset(Dataset):
 
     def read_size(self, name: str) -> [int, int]:
         """
-
         Args:
             name:
-
         Returns: (width, height)
-
         """
         size_key = f"size_{name}"
 
@@ -168,6 +163,15 @@ class LmdbDataset(Dataset):
         height = int(size.split[","][1])
 
         return width, height
+
+    def read_count(self) -> int:
+        count = self._lmdb_txn.get("num-samples".encode())
+        if count is None:
+            return 0
+        return int(count)
+
+    def write_count(self, count: int):
+        self._lmdb_txn.put("num-samples".encode(), str(count).encode())
 
     def image_key(self, name: str):
         return f"image-{name}".encode()
