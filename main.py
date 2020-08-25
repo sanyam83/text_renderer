@@ -40,7 +40,6 @@ class DBWriterProcess(Process):
                 exist_count = db.read_count()
                 global count
                 logger.info(f"Exist image count in {save_dir}: {exist_count}")
-                start = time.time()
                 while True:
                     m = self.data_queue.get()
                     if m == STOP_TOKEN:
@@ -51,11 +50,7 @@ class DBWriterProcess(Process):
                     name = "{:09d}".format(exist_count + count)
                     db.write(name, m["image"], m["label"])
                     count += 1
-                    if count % log_period == 0:
-                        logger.info(
-                            f"{(count/num_image)*100:.2f}%({count}/{num_image}) {log_period/(time.time() - start):.1f} img/s"
                         )
-                        start = time.time()
                 db.write_count(count + exist_count)
                 logger.info(f"{(count / num_image) * 100:.2f}%({count}/{num_image})")
                 logger.info(f"Finish generate: {count}. Total: {exist_count+count}")
