@@ -10,10 +10,9 @@ from loguru import logger
 from text_renderer.config import get_cfg, GeneratorCfg
 from text_renderer.dataset import LmdbDataset, ImgDataset
 from text_renderer.render import Render
-
+count = 0
 cv2.setNumThreads(1)
 STOP_TOKEN = "kill"
-count = 0
 # each child process will initialize Render in process_setup
 render: Render
 
