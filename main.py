@@ -50,7 +50,6 @@ class DBWriterProcess(Process):
                     name = "{:09d}".format(exist_count + count)
                     db.write(name, m["image"], m["label"])
                     count += 1
-                        )
                 db.write_count(count + exist_count)
                 logger.info(f"{(count / num_image) * 100:.2f}%({count}/{num_image})")
                 logger.info(f"Finish generate: {count}. Total: {exist_count+count}")
