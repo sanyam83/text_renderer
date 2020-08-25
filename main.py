@@ -10,10 +10,12 @@ from loguru import logger
 from text_renderer.config import get_cfg, GeneratorCfg
 from text_renderer.dataset import LmdbDataset, ImgDataset
 from text_renderer.render import Render
-count = 0
-f = open('store.pckl', 'wb')
-pickle.dump(count, f)
-f.close()
+try:
+  f = open('store.pckl', 'wb') # Pickle is not a .txt format
+  count = pickle.load(f)
+except IOError:
+  # Initialise default value
+  count = 0
 cv2.setNumThreads(1)
 STOP_TOKEN = "kill"
 # each child process will initialize Render in process_setup
@@ -42,9 +44,6 @@ class DBWriterProcess(Process):
             with self.dataset_cls(str(save_dir)) as db:
                 exist_count = db.read_count()
                 global count
-                f = open('store.pckl', 'rb')
-                count = pickle.load(f)
-                f.close()
                 logger.info(f"Exist image count in {save_dir}: {exist_count}")
                 while True:
                     m = self.data_queue.get()
