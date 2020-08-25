@@ -11,6 +11,9 @@ from text_renderer.config import get_cfg, GeneratorCfg
 from text_renderer.dataset import LmdbDataset, ImgDataset
 from text_renderer.render import Render
 count = 0
+f = open('store.pckl', 'wb')
+pickle.dump(count, f)
+f.close()
 cv2.setNumThreads(1)
 STOP_TOKEN = "kill"
 # each child process will initialize Render in process_setup
