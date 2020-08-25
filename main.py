@@ -12,7 +12,7 @@ from text_renderer.dataset import LmdbDataset, ImgDataset
 from text_renderer.render import Render
 
 cv2.setNumThreads(1)
-
+count = 0
 STOP_TOKEN = "kill"
 
 # each child process will initialize Render in process_setup
@@ -40,7 +40,6 @@ class DBWriterProcess(Process):
         try:
             with self.dataset_cls(str(save_dir)) as db:
                 exist_count = db.read_count()
-                count = 0
                 logger.info(f"Exist image count in {save_dir}: {exist_count}")
                 start = time.time()
                 while True:
