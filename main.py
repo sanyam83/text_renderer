@@ -11,8 +11,9 @@ from text_renderer.config import get_cfg, GeneratorCfg
 from text_renderer.dataset import LmdbDataset, ImgDataset
 from text_renderer.render import Render
 try:
-  f = open('store.pckl', 'wb') # Pickle is not a .txt format
+  f = open('store.pckl', 'rb') # Pickle is not a .txt format
   count = pickle.load(f)
+  f.close()
 except IOError:
   # Initialise default value
   count = 0
