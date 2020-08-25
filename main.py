@@ -3,7 +3,7 @@ import multiprocessing as mp
 import os
 import time
 from multiprocessing.context import Process
-
+import pickle
 import cv2
 from loguru import logger
 
@@ -11,6 +11,9 @@ from text_renderer.config import get_cfg, GeneratorCfg
 from text_renderer.dataset import LmdbDataset, ImgDataset
 from text_renderer.render import Render
 count = 0
+f = open('store.pckl', 'wb')
+pickle.dump(count, f)
+f.close()
 cv2.setNumThreads(1)
 STOP_TOKEN = "kill"
 # each child process will initialize Render in process_setup
@@ -39,6 +42,9 @@ class DBWriterProcess(Process):
             with self.dataset_cls(str(save_dir)) as db:
                 exist_count = db.read_count()
                 global count
+                f = open('store.pckl', 'rb')
+                count = pickle.load(f)
+                f.close()
                 logger.info(f"Exist image count in {save_dir}: {exist_count}")
                 while True:
                     m = self.data_queue.get()
@@ -50,6 +56,10 @@ class DBWriterProcess(Process):
                     name = "{:09d}".format(exist_count + count)
                     db.write(name, m["image"], m["label"])
                     count += 1
+                
+                f = open('store.pckl', 'wb')
+                pickle.dump(count, f)
+                f.close()
                 db.write_count(count + exist_count)
                 logger.info(f"{(count / num_image) * 100:.2f}%({count}/{num_image})")
                 logger.info(f"Finish generate: {count}. Total: {exist_count+count}")
