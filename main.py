@@ -51,7 +51,7 @@ class DBWriterProcess(Process):
                     if m == STOP_TOKEN:
                         logger.info("DBWriterProcess receive stop token")
                         break
-                    name = (exist_count + count)
+                    name = "{:09d}".format(exist_count + count)
                     db.write(name, m["image"], m["label"])
                     count += 1
                 
