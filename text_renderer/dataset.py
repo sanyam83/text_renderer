@@ -89,10 +89,10 @@ class ImgDataset(Dataset):
     def write(self, name: str, image: np.ndarray, label: str):
         img_path = os.path.join(self._img_dir, name + ".jpg")
         cv2.imwrite(img_path, image, self.encode_param())
-        self._data["labels"][name] = label
+        self._data["labels"][img_path] = label
 
         height, width = image.shape[:2]
-        self._data["sizes"][name] = (width, height)
+        self._data["sizes"][img_path] = (width, height)
 
     def read(self, name: str) -> Dict:
         img_path = os.path.join(self._img_dir, name + ".jpg")
