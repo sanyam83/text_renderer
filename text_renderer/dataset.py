@@ -91,9 +91,6 @@ class ImgDataset(Dataset):
         cv2.imwrite(img_path, image, self.encode_param())
         self._data["labels"][img_path] = label
 
-        height, width = image.shape[:2]
-        self._data["sizes"][img_path] = (width, height)
-
     def read(self, name: str) -> Dict:
         img_path = os.path.join(self._img_dir, name + ".jpg")
         image = cv2.imread(img_path)
