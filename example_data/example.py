@@ -33,7 +33,7 @@ perspective_transform = NormPerspectiveTransformCfg(20, 20, 1.5)
 
 
 rand_data = GeneratorCfg(
-    num_image=130000,
+    num_image=200000,
     save_dir=OUT_DIR / "rand_corpus",
     render_cfg=RenderCfg(
         bg_dir=BG_DIR,
