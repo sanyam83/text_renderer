@@ -13,7 +13,7 @@ from text_renderer.layout.extra_text_line import ExtraTextLineLayout
 
 
 CURRENT_DIR = Path(os.path.abspath(os.path.dirname(__file__)))
-OUT_DIR = '/content/gdrive/My Drive/OCR dataset /' "output"
+OUT_DIR = '/content/gdrive/My Drive/OCR dataset' / "output"
 DATA_DIR = CURRENT_DIR
 BG_DIR = DATA_DIR / "bg"
 CHAR_DIR = DATA_DIR / "char"
