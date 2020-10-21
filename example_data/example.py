@@ -29,7 +29,7 @@ font_cfg = dict(
 perspective_transform = NormPerspectiveTransformCfg(20, 20, 1.5)
 
 chn_data = GeneratorCfg(
-    num_image=100000,
+    num_image=20000,
     save_dir=OUT_DIR / "char_corpus",
     render_cfg=RenderCfg(
         bg_dir=BG_DIR,
@@ -50,7 +50,7 @@ chn_data = GeneratorCfg(
 
 
 rand_data = GeneratorCfg(
-    num_image=200000,
+    num_image=20000,
     save_dir=OUT_DIR / "rand_corpus",
     render_cfg=RenderCfg(
         bg_dir=BG_DIR,
@@ -60,7 +60,7 @@ rand_data = GeneratorCfg(
 )
 
 eng_word_data = GeneratorCfg(
-    num_image=100000,
+    num_image=20000,
     save_dir=OUT_DIR / "word_corpus",
     render_cfg=RenderCfg(
         bg_dir=BG_DIR,
@@ -78,7 +78,7 @@ eng_word_data = GeneratorCfg(
 
 
 same_line_data = GeneratorCfg(
-    num_image=100000,
+    num_image=20000,
     save_dir=OUT_DIR / "same_line_data",
     render_cfg=RenderCfg(
         bg_dir=BG_DIR,
@@ -113,7 +113,7 @@ same_line_data = GeneratorCfg(
 
 
 extra_text_line_data = GeneratorCfg(
-    num_image=100000,
+    num_image=20000,
     save_dir=OUT_DIR / "extra_text_line_data",
     render_cfg=RenderCfg(
         bg_dir=BG_DIR,
